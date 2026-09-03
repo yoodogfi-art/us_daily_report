@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Fixed Income Daily — 2026. 02. 19</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green:#1B4332; --green-mid:#2D6A4F; --green-lt:#EBF4EF;
+  --gold:#E8B84B; --gold-dim:#B8892A; --gold-bg:#FEFBF2;
+  --bg:#F3F4F1; --surface:#fff; --stripe:#F1F4F2;
+  --border:#D0DDD6; --text:#0F1A13; --text2:#364840; --text3:#7A8C82;
+  --pos:#145230; --neg:#8B1A1A;
+  --cat1:#E8F4ED; --cat2:#FDF8EC;  /* 카테고리 구분 bg */
+}
+html{font-size:10.5px;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;}
+
+/* ── 툴바 ── */
+#toolbar{position:sticky;top:0;z-index:999;background:var(--green);border-bottom:2px solid var(--gold);padding:5px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tb-lbl{font-family:'DM Mono',monospace;font-size:6.5px;color:rgba(255,255,255,.4);letter-spacing:1.5px;}
+.tb-btn{font-family:'DM Mono',monospace;font-size:7px;background:var(--gold);color:var(--green);border:none;border-radius:2px;padding:3px 10px;cursor:pointer;font-weight:700;}
+.tb-btn:hover{background:#f0c35a;}
+.tb-btn.sec{background:rgba(255,255,255,.13);color:rgba(255,255,255,.85);}
+.tb-btn.sec:hover{background:rgba(255,255,255,.22);}
+#edit-st{font-family:'DM Mono',monospace;font-size:6.5px;color:var(--gold);letter-spacing:1px;min-width:55px;}
+
+/* ── contenteditable ── */
+[contenteditable="true"]{outline:none;cursor:text;border-radius:1px;}
+[contenteditable="true"]:hover{background:rgba(232,184,75,.07);}
+[contenteditable="true"]:focus{background:rgba(232,184,75,.13);outline:1px dashed rgba(232,184,75,.5);}
+
+/* ── 페이지 ── */
+.page{width:794px;margin:10px auto 40px;background:var(--surface);box-shadow:0 2px 20px rgba(0,0,0,.1);}
+.hdr{background:var(--green);padding:11px 16px 9px;display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid var(--gold);}
+.hdr .ey{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.hdr .ti{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:#fff;line-height:1;}
+.hdr .so{font-family:'DM Mono',monospace;font-size:6px;color:rgba(255,255,255,.3);letter-spacing:.8px;margin-top:4px;}
+.hdr .dt{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,.7);letter-spacing:1px;text-align:right;}
+.hdr .wd{font-family:'Playfair Display',serif;font-style:italic;font-size:11px;color:var(--gold);margin-top:2px;text-align:right;}
+.content{padding:10px 12px 16px;display:flex;flex-direction:column;gap:8px;}
+
+/* ── 섹션 헤더 ── */
+.bh{background:var(--green);padding:4px 8px;display:flex;align-items:center;gap:5px;}
+.bh-dot{width:3px;height:3px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+.bh-t{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.82);}
+.bh-actions{margin-left:auto;display:flex;gap:4px;}
+.bh-btn{font-family:'DM Mono',monospace;font-size:6px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);border:none;border-radius:1px;padding:1px 7px;cursor:pointer;}
+.bh-btn:hover{background:var(--gold);color:var(--green);font-weight:700;}
+
+/* ── 테이블 공통 ── */
+.wrap{border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:.9px;text-transform:uppercase;color:rgba(255,255,255,.6);background:var(--green-mid);padding:3px 6px;text-align:right;font-weight:400;border-bottom:1px solid rgba(0,0,0,.12);white-space:nowrap;}
+thead th:first-child{text-align:left;}
+tbody td{font-family:'DM Mono',monospace;font-size:8.8px;padding:2.5px 6px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr:last-child td{border-bottom:none;}
+tbody td:first-child{font-family:'Noto Sans KR',sans-serif;font-size:8.2px;text-align:left;color:var(--text2);font-weight:400;}
+tbody tr:nth-child(even) td{background:var(--stripe);}
+tbody tr:hover td{background:var(--gold-bg);}
+.v{color:var(--text);font-weight:500;}
+.p{color:var(--pos);}
+.n{color:var(--neg);}
+.fl{color:var(--text3);}
+
+/* ── 카테고리 구분행 ── */
+.cat-sep td{
+  background:var(--green-lt) !important;
+  font-family:'DM Mono',monospace !important;
+  font-size:6px !important; letter-spacing:2px !important;
+  text-transform:uppercase !important;
+  color:var(--green-mid) !important;
+  padding:2px 6px !important;
+  border-top:1.5px solid var(--border) !important;
+  border-bottom:1px solid var(--border) !important;
+}
+
+/* ── 2열 레이아웃 ── */
+.row{display:grid;grid-template-columns:1fr 1fr;gap:7px;align-items:stretch;}
+
+/* ── 위원발언 ── */
+.txt-col{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.speakers-body{display:flex;flex-direction:column;flex:1;}
+.cm-item{padding:7px 9px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px;}
+.cm-item:last-child{border-bottom:none;}
+.cm-meta{display:flex;align-items:baseline;gap:6px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+.cm-name{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--green);font-weight:600;min-width:40px;}
+.cm-org{font-family:'DM Mono',monospace;font-size:6px;color:var(--text3);flex:1;}
+.cm-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:9px;padding:0 1px;line-height:1;}
+.cm-del:hover{color:var(--neg);}
+.cm-tx{font-size:8.5px;color:var(--text2);line-height:1.65;min-height:16px;}
+
+/* ── 경제지표 ── */
+.ind-wrap{border:1px solid var(--border);border-radius:2px;overflow:hidden;display:flex;flex-direction:column;}
+.ind-wrap table thead th:first-child{width:34px;text-align:center;}
+.ind-wrap table tbody td{font-size:8.5px;padding:2.5px 6px;}
+.ind-country{
+  font-family:'DM Mono',monospace !important;
+  font-size:6.5px !important; font-weight:600 !important;
+  letter-spacing:.5px !important; text-align:center !important;
+  color:var(--green) !important;
+  background:var(--green-lt) !important;
+  border-right:1.5px solid var(--border) !important;
+  vertical-align:middle !important;
+  white-space:nowrap;
+}
+.ind-wrap tbody td:nth-child(2){font-family:'Noto Sans KR',sans-serif;font-size:8px;text-align:left;color:var(--text2);white-space:normal;}
+.ind-row{border-top:1px solid var(--border);}
+.del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:8px;line-height:1;padding:0;}
+.del-btn:hover{color:var(--neg);}
+.del-cell{width:14px;padding:0 2px !important;text-align:center !important;}
+.ind-empty{text-align:center !important;font-family:'DM Mono',monospace !important;}
+
+/* ── 지표시황 ── */
+.idx-summary{border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.idx-summary-body{padding:8px 10px;min-height:52px;font-size:8.5px;color:var(--text2);line-height:1.75;}
+
+/* ── Summary 2×2 ── */
+.sum-tb{border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;}
+.sum-col{padding:7px 9px;}
+.sum-col:nth-child(2){border-left:1px solid var(--border);}
+.sum-col:nth-child(3){border-top:1px solid var(--border);}
+.sum-col:nth-child(4){border-top:1px solid var(--border);border-left:1px solid var(--border);}
+.sum-lbl{font-family:'DM Mono',monospace;font-size:6.5px;color:var(--green-mid);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-bottom:5px;}
+.sum-tx{font-size:8.5px;color:var(--text2);line-height:1.68;min-height:16px;}
+
+/* ── 달력 ── */
+.sched-wrap{border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.sched{display:grid;grid-template-columns:repeat(5,1fr);}
+.sched-day-col{border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.sched-day-col:last-child{border-right:none;}
+.sched-day-hd{background:var(--green-lt);padding:4px 7px;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:4px;}
+.sched-day-dt{font-family:'DM Mono',monospace;font-size:7px;color:var(--green);font-weight:600;}
+.sched-day-dw{font-family:'DM Mono',monospace;font-size:6px;color:var(--text3);letter-spacing:1px;}
+.sched-entry{padding:3px 7px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:4px;}
+.sched-entry:last-child{border-bottom:none;}
+.sched-co{font-family:'DM Mono',monospace;font-size:6px;color:var(--gold-dim);font-weight:600;text-transform:uppercase;flex-shrink:0;padding-top:1px;min-width:14px;}
+.sched-ev-nm{font-size:7.5px;color:var(--text2);line-height:1.35;flex:1;}
+.sched-ev-nm.hl{color:var(--green);font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- ── 툴바 ── -->
+<div id="toolbar">
+  <span class="tb-lbl">EDIT MODE</span>
+  <button class="tb-btn" onclick="saveCopy()">&#128190; 사본 저장</button>
+  <button class="tb-btn sec" onclick="addSpeaker()">+ 위원 추가</button>
+  <button class="tb-btn sec" onclick="addIndRegion()">+ 지표 국가</button>
+  <button class="tb-btn sec" onclick="addIndRow()">+ 지표 행</button>
+  <span id="edit-st"></span>
+</div>
+
+<div class="page">
+<div class="hdr">
+  <div>
+    <div class="ey" contenteditable="true">Fixed Income Strategy · Daily Briefing</div>
+    <div class="ti" contenteditable="true">Fixed Income Daily</div>
+    <div class="so" contenteditable="true">출처: INFOMAX, Bloomberg, 내부</div>
+  </div>
+  <div>
+    <div class="dt" contenteditable="true">2026. 02. 19</div>
+    <div class="wd" contenteditable="true">수요일</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══ ROW 1: 시장 데이터 ══ -->
+<div class="row">
+
+  <!-- ── 좌: 국내금리 + 환율 ── -->
+  <div class="wrap">
+    <div class="bh"><div class="bh-dot"></div><div class="bh-t" contenteditable="true">한국 &amp; 외환</div></div>
+    <table>
+      <thead><tr><th></th><th>T0</th><th>1D</th><th>1M</th><th>YTM</th></tr></thead>
+      <tbody>
+        <!-- 국내금리 카테고리 -->
+        <tr class="cat-sep"><td colspan="5" contenteditable="true">KR BOND</td></tr>
+        <tr><td contenteditable="true">통안 2Y</td>     <td class="v"    contenteditable="true">3.00</td>      <td class="fl"   contenteditable="true">+0.00</td>      <td class="p"   contenteditable="true">+0.01</td>      <td class="p"   contenteditable="true">+0.17</td></tr>
+        <tr><td contenteditable="true">국고 3Y</td>     <td class="v"    contenteditable="true">3.14</td>      <td class="fl"   contenteditable="true">+0.00</td>      <td class="n"   contenteditable="true">-0.04</td>      <td class="p"   contenteditable="true">+0.21</td></tr>
+        <tr><td contenteditable="true">국고 5Y</td>     <td class="v"    contenteditable="true">3.39</td>      <td class="fl"   contenteditable="true">+0.00</td>      <td class="n"   contenteditable="true">-0.09</td>      <td class="p"   contenteditable="true">+0.16</td></tr>
+        <tr><td contenteditable="true">국고 10Y</td>    <td class="v"   contenteditable="true">3.56</td>     <td class="fl"  contenteditable="true">+0.00</td>     <td class="n"  contenteditable="true">-0.08</td>     <td class="p"  contenteditable="true">+0.18</td></tr>
+        <tr><td contenteditable="true">국채3년선물</td>  <td class="v" contenteditable="true">105.120</td>  <td class="fl"contenteditable="true">+0.00%</td>  <td class="p"contenteditable="true">+0.34%</td>  <td class="n"contenteditable="true">-0.29%</td></tr>
+        <!-- 환율 카테고리 -->
+        <tr class="cat-sep"><td colspan="5" contenteditable="true">FX</td></tr>
+        <tr><td contenteditable="true">USD/KRW</td>     <td class="v"    contenteditable="true">1,451.400</td>      <td class="p"   contenteditable="true">+0.45%</td>      <td class="n"   contenteditable="true">-1.81%</td>      <td class="p"   contenteditable="true">+0.67%</td></tr>
+        <tr><td contenteditable="true">NDF</td>         <td class="v"         contenteditable="true">1,450.600</td>          <td class="fl"        contenteditable="true">+0.00%</td>          <td class="n"        contenteditable="true">-1.93%</td>          <td class="p"        contenteditable="true">+0.69%</td></tr>
+        <tr><td contenteditable="true">Dollar Index</td><td class="v"contenteditable="true">97.211</td> <td class="fl"contenteditable="true">+0.00%</td> <td class="n"contenteditable="true">-1.77%</td> <td class="n"contenteditable="true">-1.12%</td></tr>
+        <tr><td contenteditable="true">USD/JPY</td>     <td class="v"    contenteditable="true">153.550</td>      <td class="fl"   contenteditable="true">+0.00%</td>      <td class="n"   contenteditable="true">-2.58%</td>      <td class="n"   contenteditable="true">-2.17%</td></tr>
+        <tr><td contenteditable="true">EUR/USD</td>     <td class="v"    contenteditable="true">1.186</td>      <td class="fl"   contenteditable="true">+0.00%</td>      <td class="p"   contenteditable="true">+1.08%</td>      <td class="p"   contenteditable="true">+1.10%</td></tr>
+        <tr><td contenteditable="true">JPY/KRW</td>     <td class="v"    contenteditable="true">940.800</td>      <td class="fl"   contenteditable="true">+0.00%</td>      <td class="p"   contenteditable="true">+0.42%</td>      <td class="p"   contenteditable="true">+2.21%</td></tr>
+        <tr><td contenteditable="true">USD/CNY</td>     <td class="v"    contenteditable="true">6.909</td>      <td class="fl"   contenteditable="true">+0.00%</td>      <td class="n"   contenteditable="true">-0.74%</td>      <td class="n"   contenteditable="true">-1.57%</td></tr>
+        <tr><td contenteditable="true">GBP/USD</td>     <td class="v"    contenteditable="true">1.362</td>      <td class="fl"   contenteditable="true">+0.00%</td>      <td class="p"   contenteditable="true">+1.13%</td>      <td class="p"   contenteditable="true">+1.23%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 우: 증시 + 채권 + 원자재 ── -->
+  <div class="wrap">
+    <div class="bh"><div class="bh-dot"></div><div class="bh-t" contenteditable="true">증시 &amp; 채권 &amp; 원자재</div></div>
+    <table>
+      <thead><tr><th></th><th>T0</th><th>1D</th><th>1M</th><th>YTM</th></tr></thead>
+      <tbody>
+        <!-- 증시 -->
+        <tr class="cat-sep"><td colspan="5" contenteditable="true">EQUITY</td></tr>
+        <tr><td contenteditable="true">KOSPI</td>       <td class="v"      contenteditable="true">5,661.00</td>        <td class="p"     contenteditable="true">+2.80%</td>        <td class="p"     contenteditable="true">+15.87%</td>        <td class="p"     contenteditable="true">+31.36%</td></tr>
+        <tr><td contenteditable="true">NIKKEI</td>      <td class="v"     contenteditable="true">57,595.54</td>       <td class="p"    contenteditable="true">+0.79%</td>       <td class="p"    contenteditable="true">+8.69%</td>       <td class="p"    contenteditable="true">+11.12%</td></tr>
+        <tr><td contenteditable="true">중국상해종합</td> <td class="v" contenteditable="true">4,082.07</td>  <td class="fl"contenteditable="true">+0.00%</td>  <td class="n"contenteditable="true">-0.77%</td>  <td class="p"contenteditable="true">+2.85%</td></tr>
+        <tr><td contenteditable="true">DOW</td>         <td class="v"         contenteditable="true">31.58</td>          <td class="fl"        contenteditable="true">+0.00%</td>          <td class="p"        contenteditable="true">+18.81%</td>          <td class="p"        contenteditable="true">+30.12%</td></tr>
+        <tr><td contenteditable="true">S&amp;P500</td>  <td class="v"     contenteditable="true">82.13</td>       <td class="fl"    contenteditable="true">+0.00%</td>       <td class="n"    contenteditable="true">-15.69%</td>       <td class="n"    contenteditable="true">-15.03%</td></tr>
+        <tr><td contenteditable="true">NASDAQ</td>      <td class="v"     contenteditable="true">6,881.31</td>       <td class="fl"    contenteditable="true">+0.00%</td>       <td class="p"    contenteditable="true">+1.24%</td>       <td class="p"    contenteditable="true">+0.33%</td></tr>
+        <!-- 미국 채권 -->
+        <tr class="cat-sep"><td colspan="5" contenteditable="true">US TREASURY</td></tr>
+        <tr><td contenteditable="true">T-Note (2yr)</td> <td class="v"  contenteditable="true">3.4800</td>  <td class="p"  contenteditable="true">+0.0140</td>  <td class="n"  contenteditable="true">-0.1190</td>  <td class="p"  contenteditable="true">+0.0050</td></tr>
+        <tr><td contenteditable="true">T-Note (10yr)</td><td class="v" contenteditable="true">4.1000</td> <td class="p" contenteditable="true">+0.0160</td> <td class="n" contenteditable="true">-0.1950</td> <td class="n" contenteditable="true">-0.0920</td></tr>
+        <tr><td contenteditable="true">T-Bill (30yr)</td><td class="v" contenteditable="true">4.7230</td> <td class="p" contenteditable="true">+0.0140</td> <td class="n" contenteditable="true">-0.1980</td> <td class="n" contenteditable="true">-0.1480</td></tr>
+        <!-- 해외 금리 -->
+        <tr class="cat-sep"><td colspan="5" contenteditable="true">INTL BOND (10Y)</td></tr>
+        <tr><td contenteditable="true">독일 10Y</td>    <td class="v"   contenteditable="true">2.7430</td>     <td class="n"  contenteditable="true">-0.0023</td>     <td class="n"  contenteditable="true">-0.1184</td>     <td class="n"  contenteditable="true">-0.1563</td></tr>
+        <tr><td contenteditable="true">영국 10Y</td>    <td class="v"   contenteditable="true">4.3738</td>     <td class="fl"  contenteditable="true">+0.0000</td>     <td class="n"  contenteditable="true">-0.0871</td>     <td class="n"  contenteditable="true">-0.1653</td></tr>
+        <tr><td contenteditable="true">일본 10Y</td>    <td class="v"   contenteditable="true">2.1470</td>     <td class="p"  contenteditable="true">+0.0070</td>     <td class="n"  contenteditable="true">-0.1970</td>     <td class="p"  contenteditable="true">+0.0273</td></tr>
+        <!-- 원자재 / 기타 -->
+        <tr class="cat-sep"><td colspan="5" contenteditable="true">COMMODITY &amp; RATES</td></tr>
+        <tr><td contenteditable="true">WTI</td>         <td class="v"         contenteditable="true">65.260</td>          <td class="p"        contenteditable="true">+0.09%</td>          <td class="p"        contenteditable="true">+9.81%</td>          <td class="p"        contenteditable="true">+13.99%</td></tr>
+        <tr><td contenteditable="true">GOLD</td>        <td class="v"        contenteditable="true">4861.450</td>         <td class="fl"       contenteditable="true">+0.00%</td>         <td class="p"       contenteditable="true">+2.39%</td>         <td class="p"       contenteditable="true">+11.68%</td></tr>
+        <tr><td contenteditable="true">SOFR</td>        <td class="v"        contenteditable="true">3.7655</td>         <td class="fl"       contenteditable="true">+0.0000</td>         <td class="n"       contenteditable="true">-0.1347</td>         <td class="n"       contenteditable="true">-0.2379</td></tr>
+        <tr><td contenteditable="true">TED spread</td>  <td class="v"  contenteditable="true">115.972</td>   <td class="fl" contenteditable="true">+0.0000</td>   <td class="n" contenteditable="true">-2.8000</td>   <td class="n" contenteditable="true">-7.4000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ ROW 2: 경제지표 | 위원발언 ══ -->
+<div class="row">
+  <div class="ind-wrap">
+    <div class="bh">
+      <div class="bh-dot"></div>
+      <div class="bh-t" contenteditable="true">주요 경제지표</div>
+      <div class="bh-actions">
+        <button class="bh-btn" onclick="addIndRegion()">+ 국가</button>
+        <button class="bh-btn" onclick="addIndRow()">+ 지표</button>
+      </div>
+    </div>
+    <table id="ind-table">
+      <thead>
+        <tr>
+          <th style="width:34px;text-align:center;">국가</th>
+          <th style="text-align:left;">지표명</th>
+          <th style="width:52px;">Actual</th>
+          <th style="width:52px;">Survey</th>
+          <th style="width:52px;">Prior</th>
+          <th style="width:14px;"></th>
+        </tr>
+      </thead>
+      <tbody id="ind-body"><tr class="ind-row"><td class="ind-country" rowspan="2" contenteditable="true">🇺🇸 US</td><td contenteditable="true">신규실업수당</td><td class="fl" contenteditable="true">21.5만</td><td class="fl" contenteditable="true">21.5만</td><td class="fl" contenteditable="true">21.3만</td><td class="del-cell"><button class="del-btn" onclick="removeIndRow(this)">&#x2715;</button></td></tr>
+<tr class="ind-row"><td contenteditable="true">PPI (1월)</td><td class="v" contenteditable="true">0.4%</td><td class="fl" contenteditable="true">0.3%</td><td class="fl" contenteditable="true">0.5%</td><td class="del-cell"><button class="del-btn" onclick="removeIndRow(this)">&#x2715;</button></td></tr>
+<tr class="ind-row"><td class="ind-country" rowspan="1" contenteditable="true">🇰🇷 KR</td><td contenteditable="true">수출물가지수</td><td class="fl" contenteditable="true">—</td><td class="fl" contenteditable="true">—</td><td class="fl" contenteditable="true">—</td><td class="del-cell"><button class="del-btn" onclick="removeIndRow(this)">&#x2715;</button></td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="txt-col">
+    <div class="bh">
+      <div class="bh-dot"></div>
+      <div class="bh-t" contenteditable="true">위원 발언</div>
+    </div>
+    <div class="speakers-body" id="speakers-body"><div class="cm-item"><div class="cm-meta"><span class="cm-name" contenteditable="true">홍길동</span><span class="cm-org"  contenteditable="true">○○증권</span><button class="cm-del" onclick="this.closest('.cm-item').remove()">&#x2715;</button></div><div class="cm-tx" contenteditable="true">연준 금리 동결 기조 유지 전망이며 단기물 강세 지속.</div></div></div>
+  </div>
+</div>
+
+<!-- ══ ROW 3: 경제지표 시황 ══ -->
+<div class="idx-summary">
+  <div class="bh"><div class="bh-dot"></div><div class="bh-t" contenteditable="true">경제지표 시황</div></div>
+  <div class="idx-summary-body" contenteditable="true">미국 신규실업수당은 예상치에 부합, 필라델피아 연은지수는 상회.</div>
+</div>
+
+<!-- ══ ROW 4: Summary 2×2 ══ -->
+<div class="sum-tb">
+  <div class="bh"><div class="bh-dot"></div><div class="bh-t" contenteditable="true">증시 / 채권시장 / 유가 / 환시 Summary</div></div>
+  <div class="sum-grid">
+    <div class="sum-col"><div class="sum-lbl" contenteditable="true">채권시장</div><div class="sum-tx" contenteditable="true">채권 금리 전구간 하락.</div></div>
+    <div class="sum-col"><div class="sum-lbl" contenteditable="true">증시</div><div class="sum-tx" contenteditable="true">KOSPI 강세.</div></div>
+    <div class="sum-col"><div class="sum-lbl" contenteditable="true">유가</div><div class="sum-tx" contenteditable="true">WTI 65달러.</div></div>
+    <div class="sum-col"><div class="sum-lbl" contenteditable="true">환시</div><div class="sum-tx" contenteditable="true">원달러 1450원대.</div></div>
+  </div>
+</div>
+
+<!-- ══ ROW 5: 달력 ══ -->
+<div class="sched-wrap">
+  <div class="bh"><div class="bh-dot"></div><div class="bh-t" contenteditable="true">주간 일정</div></div>
+  <div class="sched"><div class="sched-day-col"><div class="sched-day-hd"><span class="sched-day-dt" contenteditable="true">2/17</span><span class="sched-day-dw">MON</span></div><div class="sched-entry"><span class="sched-co" contenteditable="true">US</span><span class="sched-ev-nm" contenteditable="true">대통령의 날 (휴장)</span></div></div>
+<div class="sched-day-col"><div class="sched-day-hd"><span class="sched-day-dt" contenteditable="true">2/18</span><span class="sched-day-dw">TUE</span></div><div class="sched-entry"><span class="sched-co"></span><span class="sched-ev-nm fl" contenteditable="true">—</span></div></div>
+<div class="sched-day-col"><div class="sched-day-hd"><span class="sched-day-dt" contenteditable="true">2/19</span><span class="sched-day-dw">WED</span></div><div class="sched-entry"><span class="sched-co" contenteditable="true">US</span><span class="sched-ev-nm hl" contenteditable="true">FOMC 의사록</span></div></div>
+<div class="sched-day-col"><div class="sched-day-hd"><span class="sched-day-dt" contenteditable="true">2/20</span><span class="sched-day-dw">THU</span></div><div class="sched-entry"><span class="sched-co" contenteditable="true">NZ</span><span class="sched-ev-nm hl" contenteditable="true">RBNZ 금리결정</span></div></div>
+<div class="sched-day-col"><div class="sched-day-hd"><span class="sched-day-dt" contenteditable="true">2/21</span><span class="sched-day-dw">FRI</span></div><div class="sched-entry"><span class="sched-co" contenteditable="true">US</span><span class="sched-ev-nm" contenteditable="true">제조업 PMI</span></div></div></div>
+</div>
+
+</div></div>
+
+<script>
+let modified=false;
+const st=document.getElementById('edit-st');
+document.addEventListener('input',()=>{if(!modified){modified=true;st.textContent='● 수정됨';}});
+
+// ── 위원 추가 ── (id="speakers-body" 에 append)
+function addSpeaker(){
+  const body=document.getElementById('speakers-body');
+  if(!body){alert('speakers-body 를 찾을 수 없습니다.');return;}
+  const d=document.createElement('div');
+  d.className='cm-item';
+  d.innerHTML=`<div class="cm-meta">
+    <span class="cm-name" contenteditable="true">이름</span>
+    <span class="cm-org"  contenteditable="true">소속</span>
+    <button class="cm-del" onclick="this.closest('.cm-item').remove()">&#x2715;</button>
+  </div>
+  <div class="cm-tx" contenteditable="true">발언 내용...</div>`;
+  body.appendChild(d);
+  d.querySelector('.cm-name').focus();
+  modified=true; st.textContent='● 수정됨';
+}
+
+// ── 지표 행 추가 ──
+function addIndRow(){
+  const tbody=document.getElementById('ind-body');
+  const tr=document.createElement('tr');
+  tr.className='ind-row';
+  tr.innerHTML=`<td class="ind-country" contenteditable="true">??</td>
+    <td contenteditable="true">지표명</td>
+    <td class="v"  contenteditable="true">—</td>
+    <td class="fl" contenteditable="true">—</td>
+    <td class="fl" contenteditable="true">—</td>
+    <td class="del-cell"><button class="del-btn" onclick="removeIndRow(this)">&#x2715;</button></td>`;
+  tbody.appendChild(tr);
+  tr.querySelector('[contenteditable]').focus();
+  modified=true; st.textContent='● 수정됨';
+}
+
+// ── 지표 국가 추가 ──
+function addIndRegion(){
+  const name=prompt('국가/지역명 입력 (예: 🇺🇸 US, 🇰🇷 KR, 🇪🇺 EU)');
+  if(!name)return;
+  const tbody=document.getElementById('ind-body');
+  const tr=document.createElement('tr');
+  tr.className='ind-row';
+  tr.innerHTML=`<td class="ind-country" contenteditable="true">${name}</td>
+    <td contenteditable="true">지표명</td>
+    <td class="v"  contenteditable="true">—</td>
+    <td class="fl" contenteditable="true">—</td>
+    <td class="fl" contenteditable="true">—</td>
+    <td class="del-cell"><button class="del-btn" onclick="removeIndRow(this)">&#x2715;</button></td>`;
+  tbody.appendChild(tr);
+  modified=true; st.textContent='● 수정됨';
+}
+
+// ── 지표 행 삭제 (rowspan 고려) ──
+function removeIndRow(btn){
+  const tr=btn.closest('tr');
+  const countryTd=tr.querySelector('.ind-country');
+  if(countryTd && countryTd.rowSpan>1){
+    // 다음 형제 행에 국가 td 이동
+    const next=tr.nextElementSibling;
+    if(next){
+      const newTd=countryTd.cloneNode(true);
+      newTd.rowSpan=countryTd.rowSpan-1;
+      next.insertBefore(newTd,next.firstChild);
+    }
+  }
+  tr.remove();
+}
+
+// ── 사본 저장 ──
+function saveCopy(){
+  const tb=document.getElementById('toolbar');
+  tb.style.display='none';
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
+  const ct=clone.querySelector('#toolbar'); if(ct)ct.remove();
+  clone.querySelectorAll('script').forEach(s=>s.remove());
+  const blob=new Blob(['<!DOCTYPE html>\n'+clone.outerHTML],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const dtEl=document.querySelector('.hdr .dt');
+  const dtStr=dtEl?dtEl.textContent.replace(/[\.\s]/g,''):'report';
+  const a=document.createElement('a');
+  a.href=url; a.download='report_'+dtStr+'_edited.html'; a.click();
+  URL.revokeObjectURL(url);
+  tb.style.display=''; st.textContent='✓ 저장됨';
+}
+</script>
+</body>
+</html>
